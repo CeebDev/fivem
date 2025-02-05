@@ -65,20 +65,20 @@ namespace fx
 		template<typename T>
 		inline const T& CheckArgument(int index)
 		{
-			const auto& argument = GetArgument<T>(index);
-
-			if (argument == T())
-			{
-				throw std::runtime_error(va("Argument at index %d was null.", index));
-			}
-
-			if constexpr (std::is_pointer_v<T>)
-			{
-				uint8_t probe = *(uint8_t*)argument;
-				debug::Alias(&probe);
-			}
-
-			return argument;
+		    const auto& argument = GetArgument<T>(index);
+		
+		    if constexpr (std::is_pointer_v<T>)
+		    {
+		        if (argument == nullptr)
+		        {
+		            throw std::runtime_error(va("Argument at index %d was null.", index));
+		        }
+				
+		        uint8_t probe = *(uint8_t*)argument;
+		        debug::Alias(&probe);
+		    }
+		
+		    return argument;
 		}
 
 		inline int GetArgumentCount()
